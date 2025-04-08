@@ -1,11 +1,13 @@
 import express from 'express';
-import Post from '../models/post.model.js';
+import { createPost, getPost, getPosts } from '../lib/post.controller.js';
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    const posts = await Post.find();;
-    res.status(200).json(posts);
-});
+// ALL GET REQUEST 
+router.get('/', getPosts);
+router.get('/:slug', getPost);
+
+// ALL POST REQUEST
+router.post('/', createPost);
 
 // router.post("/", async (req, res) => {
 //     try {
