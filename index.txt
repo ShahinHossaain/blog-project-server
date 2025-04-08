@@ -1,0 +1,24 @@
+import mongoose from 'mongoose';
+
+const uri = "mongodb://0.0.0.0:27017/blog"; // connect directly to blog DB
+
+const postSchema = new mongoose.Schema({
+    title: String,
+    slug: String,
+    desc: String,
+    content: String,
+    user: String
+});
+
+const Post = mongoose.model('Post', postSchema);
+
+mongoose.connect(uri)
+    .then(async () => {
+        const posts = await Post.find(); // fetch all posts
+        console.log("Posts:", posts);
+        mongoose.disconnect();
+    })
+    .catch(err => {
+        console.error("DB connection error:", err);
+    });
+
