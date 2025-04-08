@@ -15,6 +15,18 @@ app.use("/comment", commentRouter);
 app.use("/post", postRouter);
 app.use("/user", userRouter);
 
+// ERROR HANDLER 
+app.use((error, req, res, next) => {
+    res.status(error.status || 500); // Sets HTTP status code, defaults to 500
+
+    res.json({
+        message: error.message || "Something went wrong!", // Provides error message
+        status: error.status, // Includes error status
+        stack: error.stack, // Displays stack trace
+    });
+});
+
+
 // First connect to DB, then start server
 connectDB()
     .then(() => {

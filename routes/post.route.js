@@ -1,5 +1,5 @@
 import express from 'express';
-import { createPost, getPost, getPosts } from '../lib/post.controller.js';
+import { createPost, deletePost, getPost, getPosts } from '../lib/post.controller.js';
 const router = express.Router();
 
 // ALL GET REQUEST 
@@ -8,6 +8,10 @@ router.get('/:slug', getPost);
 
 // ALL POST REQUEST
 router.post('/', createPost);
+
+// ALL DELETE REQUEST 
+router.delete('/:id', deletePost);
+
 
 // router.post("/", async (req, res) => {
 //     try {
