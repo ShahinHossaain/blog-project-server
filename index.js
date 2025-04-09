@@ -5,15 +5,31 @@ import userRouter from "./routes/user.route.js";
 import commentRouter from "./routes/comment.route.js";
 import postRouter from "./routes/post.route.js";
 import connectDB from "./lib/connectDB.js";
+import webHookRouter from "./routes/webhook.route.js";
+import { clerkMiddleware } from "@clerk/express";
 
 dotenv.config();
 const app = express();
+app.use("/webhooks", webHookRouter);
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
-
+app.use(clerkMiddleware());
 app.use("/comment", commentRouter);
 app.use("/post", postRouter);
 app.use("/user", userRouter);
+
+app.get("/auth-state", (req, res) => {
+    const authState = req.auth;
+    res.json(authState);
+});
+
+app.get("/protect", (req, res) => {
+    const { userId } = req.auth;
+    if (!userId) {
+        return res.status(401).json("not authenticated");
+    }
+    res.status(200).json("content");
+});
 
 // ERROR HANDLER 
 app.use((error, req, res, next) => {
