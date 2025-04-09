@@ -1,4 +1,5 @@
 import Post from "../models/post.model.js";
+import User from "../models/user.model.js";
 
 export const getPosts = async (req, res) => {
     const posts = await Post.find();;
@@ -11,29 +12,49 @@ export const getPost = async (req, res) => {
 }
 
 export const createPost = async (req, res) => {
-    try {
-        const newPost = new Post(req.body);
-        console.log("body", req.body);
-        const savedPost = await newPost.save();
-        res.status(201).json(savedPost);
-    } catch (err) {
-        console.error("Error creating post:", err);
-        res.status(400).json({ error: "Failed to create post" });
+    const clerkUserId = req.auth.userId;
+
+    if (!clerkUserId) {
+        return res.status(401).json("Not authenticated!");
     }
-}
+
+    const user = await User.findOne({ clerkUserId });
+
+    if (!user) {
+        return res.status(404).json("User not found!");
+    }
+
+    let slug = req.body.title.replace(/ /g, "-").toLowerCase();
+
+    let existingPost = await Post.findOne({ slug });
+
+    let counter = 2;
+
+    while (existingPost) {
+        slug = `${slug}-${counter}`;
+        existingPost = await Post.findOne({ slug });
+        counter++;
+    }
+
+    const newPost = new Post({ user: user._id, slug, ...req.body });
+
+    const post = await newPost.save();
+    res.status(200).json(post);
+};
 
 export const deletePost = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deletedPost = await Post.findByIdAndDelete(id);
+    const clerkUserId = req.auth.userId;
 
-        if (!deletedPost) {
-            return res.status(404).json({ error: "Post not found" });
-        }
-
-        res.status(200).json({ message: "Post deleted successfully", deletedPost });
-    } catch (err) {
-        console.error("Error deleting post:", err);
-        res.status(500).json({ error: "Failed to delete post" });
+    if (!clerkUserId) {
+        return res.status(401).json("Not authenticated!");
     }
+
+    const user = await User.findOne({ clerkUserId });
+
+    const post = await Post.findOneAndDelete({
+        _id: req.params.id,
+        user: user._id,
+    });
+
+    res.status(200).json("Post has been deleted", post);
 };

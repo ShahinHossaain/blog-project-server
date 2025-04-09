@@ -7,13 +7,17 @@ import postRouter from "./routes/post.route.js";
 import connectDB from "./lib/connectDB.js";
 import webHookRouter from "./routes/webhook.route.js";
 import { clerkMiddleware } from "@clerk/express";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
+app.use(cors(process.env.CLIENT_URL));
 app.use("/webhooks", webHookRouter);
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
 app.use(clerkMiddleware());
+// new 
+
 app.use("/comment", commentRouter);
 app.use("/post", postRouter);
 app.use("/user", userRouter);
@@ -26,9 +30,9 @@ app.get("/auth-state", (req, res) => {
 app.get("/protect", (req, res) => {
     const { userId } = req.auth;
     if (!userId) {
-        return res.status(401).json("not authenticated");
+        return res.status(401).json("not authenticated bro");
     }
-    res.status(200).json("content");
+    res.status(200).json("contentt");
 });
 
 // ERROR HANDLER 
