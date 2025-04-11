@@ -1,8 +1,9 @@
-import express from 'express';
-const router = express.Router();
+import express from "express"
+import { getUserSavedPosts, savePost } from "../controllers/user.controller.js"
 
-router.get('/', (req, res) => {
-    res.status(200).json({ message: 'User route is working' });
-});
+const router = express.Router()
+
+router.get("/saved", getUserSavedPosts)
+router.patch("/save", savePost)
 
 export default router;

@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 app.use(clerkMiddleware());
 app.use("/comments", commentRouter);
 app.use("/post", postRouter);
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers",
