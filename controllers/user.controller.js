@@ -13,7 +13,6 @@ export const getUserSavedPosts = async (req, res) => {
 };
 
 export const savePost = async (req, res) => {
-    console.log("called")
     const clerkUserId = req.auth.userId;
     const postId = req.body.postId;
 
