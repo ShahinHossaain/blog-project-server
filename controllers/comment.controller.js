@@ -44,9 +44,7 @@ export const deleteComment = async (req, res) => {
         await Comment.findByIdAndDelete(req.params.id);
         return res.status(200).json("Comment has been deleted");
     }
-    console.log(clerkUserId)
     const user = await User.findOne({ clerkUserId });
-    console.log(user)
 
     const deletedComment = await Comment.findOneAndDelete({
         _id: id,
