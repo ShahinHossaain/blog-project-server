@@ -1,11 +1,12 @@
 import express from 'express';
 import { createPost, deletePost, featurePost, getPost, getPosts, uploadAuth } from '../controllers/post.controller.js';
+import increaseVisit from '../middlewares/increaseVisit.js';
 const router = express.Router();
 
 // ALL GET REQUEST 
 router.get('/upload-auth', uploadAuth);
 router.get('/', getPosts);
-router.get('/:slug', getPost);
+router.get('/:slug', increaseVisit, getPost);
 
 // ALL POST REQUEST
 router.post('/', createPost);
