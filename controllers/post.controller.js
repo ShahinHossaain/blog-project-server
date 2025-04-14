@@ -11,8 +11,6 @@ export const getPosts = async (req, res) => {
 
     const query = {};
 
-    console.log(req.query);
-
     const cat = req.query.cat;
     const author = req.query.author;
     const searchQuery = req.query.search;
@@ -81,6 +79,11 @@ export const getPost = async (req, res) => {
     const post = await Post.findOne({ slug: req.params.slug }).populate("user", "username img");
     res.status(200).json(post);
 }
+export const getPostById = async (req, res) => {
+    console.log("hit")
+    const post = await Post.findOne({ _id: req.params.id });
+    res.status(200).json(post);
+}
 
 export const createPost = async (req, res) => {
     const clerkUserId = req.auth.userId;
@@ -133,6 +136,11 @@ export const deletePost = async (req, res) => {
         _id: req.params.id,
         user: user._id,
     });
+
+    await User.updateMany(
+        { savePost: req.params.id },
+        { $pull: { savePost: req.params.id } }
+    );
 
     res.status(200).json("Post has been deleted", post);
 };
