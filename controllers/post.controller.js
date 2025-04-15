@@ -8,6 +8,7 @@ export const getPosts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 2;
 
+    console.log("onek valo")
 
     const query = {};
 
@@ -80,7 +81,6 @@ export const getPost = async (req, res) => {
     res.status(200).json(post);
 }
 export const getPostById = async (req, res) => {
-    console.log("hit")
     const post = await Post.findOne({ _id: req.params.id });
     res.status(200).json(post);
 }
